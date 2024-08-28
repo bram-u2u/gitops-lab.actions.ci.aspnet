@@ -1,1 +1,29 @@
+name: Build-and-Test
 
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    # checkout all sources from git
+    - name: Checkout Sources
+      uses: actions/checkout@v4
+    # install dotnet SDK
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    # restore NuGet packages
+    - name: Restore dependencies
+      run: dotnet restore
+    # build the project
+    - name: Build
+      run: dotnet build --no-restore
+    # run tests
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
